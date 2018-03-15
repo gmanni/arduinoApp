@@ -28,9 +28,9 @@ public class blynkClass {
     }
 
     public void getPinValue(String pinType, int pinNumber){
-        HttpGetRequest getRequest = new HttpGetRequest();
-        getRequest.execute(this.server + this.auth_token + "/get/" + pinType + String.valueOf(pinNumber));
-
+        //HttpGetRequest getRequest = new HttpGetRequest();
+        //String risultato = getRequest.execute(this.server + this.auth_token + "/get/" + pinType + String.valueOf(pinNumber));
+        Log.i("CONNESSO", this.isConnected());
     }
 
     public String setValue(){
@@ -38,10 +38,11 @@ public class blynkClass {
         return "";
     }
 
-    public boolean isConnected(){
+    public String isConnected(){
         // verifica se l'hardware legato al token è connesso
-
-        return true;
+        HttpGetRequest getRequest = new HttpGetRequest();
+        String risultato = String.valueOf(getRequest.execute(this.server + this.auth_token + "/isHardwareConnected"));
+        return risultato;
     }
     public boolean getConnectionStatus(){
         return true;
@@ -58,6 +59,7 @@ public class blynkClass {
     void onProgressUpdate (Progress... values)
     void onPostExecute (Result result)
     */
+
 
     public class HttpGetRequest extends AsyncTask<String, Void, String> {
         public static final String REQUEST_METHOD = "GET";
@@ -115,6 +117,7 @@ public class blynkClass {
         protected void onPostExecute(String result){
             Log.i("VEDIAMO ", result.toString());
             super.onPostExecute(result);
+
         }
     }
 
