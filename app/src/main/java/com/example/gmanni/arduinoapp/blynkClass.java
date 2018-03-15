@@ -22,21 +22,25 @@ public class blynkClass {
     String server;
 
 
-
-    public blynkClass(String auth_token){
-        server = "http://blynk-cloud.com/";
-        this.auth_token = auth_token;
+    public blynkClass(String authToken){
+        this.server = "http://blynk-cloud.com/";
+        this.auth_token = authToken;
     }
 
-    public String getValue(){
-        return "";
+    public void getPinValue(String pinType, int pinNumber){
+        HttpGetRequest getRequest = new HttpGetRequest();
+        getRequest.execute(this.server + this.auth_token + "/get/" + pinType + String.valueOf(pinNumber));
+
     }
 
     public String setValue(){
+        //getRequest.execute(this.server + this.auth_token + "/update/d6?value=0");
         return "";
     }
 
     public boolean isConnected(){
+        // verifica se l'hardware legato al token è connesso
+
         return true;
     }
     public boolean getConnectionStatus(){
@@ -55,37 +59,23 @@ public class blynkClass {
     void onPostExecute (Result result)
     */
 
-    public class HttpGetRequest extends AsyncTask<Void, Void, String> {
+    public class HttpGetRequest extends AsyncTask<String, Void, String> {
         public static final String REQUEST_METHOD = "GET";
         public static final int READ_TIMEOUT = 15000;
         public static final int CONNECTION_TIMEOUT = 15000;
-        public String serverUrl;
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.i("HttpGetRequest", "onPreExecute");
-
-        }
-
-        @Override
-        protected String doInBackground(Void... params){
-            Log.i("HttpGetRequest", "doInBackground");
-            //String stringUrl = params[0];
+        protected String doInBackground(String... params){
+            String stringUrl = params[0];
             String result;
             String inputLine;
-            serverUrl = "http://blynk-cloud.com/30fd52bdfd024481a8fc7db4ee924a20/get/d6/";
-            //serverUrl = "http://www.google.it/";
-
-
             try {
                 //Create a URL object holding our url
-                //URL myUrl = new URL(stringUrl);
-                URL myUrl = new URL(serverUrl);
+                URL myUrl = new URL(stringUrl);
 
                 //Create a connection
-                HttpURLConnection connection = (HttpURLConnection) myUrl.openConnection();
-
+                HttpURLConnection connection =(HttpURLConnection)
+                        myUrl.openConnection();
                 //Set methods and timeouts
                 connection.setRequestMethod(REQUEST_METHOD);
                 connection.setReadTimeout(READ_TIMEOUT);
@@ -93,6 +83,8 @@ public class blynkClass {
 
                 //Connect to our url
                 connection.connect();
+
+                Log.i("RESPONSE CODE", String.valueOf(connection.getResponseCode()));
 
                 //Create a new InputStreamReader
                 InputStreamReader streamReader = new InputStreamReader(connection.getInputStream());
@@ -110,24 +102,21 @@ public class blynkClass {
                 reader.close();
                 streamReader.close();
                 //Set our result equal to our stringBuilder
-                Log.i("VEDIAMO", stringBuilder.toString());
                 result = stringBuilder.toString();
-
             }
             catch(IOException e){
                 e.printStackTrace();
                 result = null;
             }
             return result;
-            //return "CIAO";
         }
+
+        @Override
         protected void onPostExecute(String result){
-            result="CIAO";
-            Log.i("HttpGetRequest", "onPostExecute");
-            Log.i("result", result.toString());
+            Log.i("VEDIAMO ", result.toString());
             super.onPostExecute(result);
         }
+    }
 
 
     }
-}
