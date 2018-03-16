@@ -85,7 +85,7 @@ public class blynkClass {
 
                 //Connect to our url
                 connection.connect();
-
+                Log.i("CONTENT TYPE", String.valueOf(connection.getContentType()));
                 Log.i("RESPONSE CODE", String.valueOf(connection.getResponseCode()));
 
                 //Create a new InputStreamReader
